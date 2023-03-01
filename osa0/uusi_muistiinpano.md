@@ -4,7 +4,7 @@ sequenceDiagram
     participant browser
     participant server
     
-    browser->>server: GET POST https://fullstack-exampleapp.herokuapp.com/new_note
+    browser->>server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
     activate server
     server-->>browser: HTTP Status Code 302. 
     deactivate server
