@@ -6,10 +6,12 @@ const Header = (props) => {
   )
 }
 
-const Content = (props) => {
+const Content = () => {
   return (
     <div>
-      <p>{props.name} {props.exercises}</p>
+      <Part name="Fundamentals of React" exercises={10} />
+      <Part name="Using props to pass data" exercises={7} />
+      <Part name="State of a component" exercises={14} />
     </div>
   )
 }
@@ -22,16 +24,21 @@ const Total = (props) => {
   )
 }
 
+const Part = (props) => {
+  return (
+    <div>
+      <p>{props.name} {props.exercises}</p>
+    </div>
+  )
+}
+
 const App = () => {
   const course = 'Half Stack application development'
-  // const-määrittelyt
 
   return (
     <div>
       <Header course={course} />
-      <Content name="Fundamentals of React" exercises={10} />
-      <Content name="Using props to pass data" exercises={7} />
-      <Content name="State of a component" exercises={14} />
+      <Content />
       <Total total={10+7+14} />
     </div>
   )
