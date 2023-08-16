@@ -11,10 +11,10 @@ const Header = (props) => {
   )
 }
 
-const History = (props) => {
+const Statistics = (props) => {
   return (
     <div>
-      {props.Choice}: {props.Clicks}
+      {props.Name}: {props.Clicks}
     </div>
   )
 }
@@ -29,18 +29,26 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [all, setAll] = useState(0)
 
 
   const handleGoodClick = () => {
     setGood(good + 1)
+    setAverage(average + 1)
+    setAll(all + 1)
   }
 
   const handleNeutralClick = () => {
     setNeutral(neutral + 1)
+    setAll(all + 1)
+    
   }
 
   const handleBadClick = () => {
     setBad(bad + 1)
+    setAverage(average - 1)
+    setAll(all + 1)
   }
 
   return (
@@ -53,9 +61,13 @@ const App = () => {
 
         <Header header='statistics' />
 
-        <History Choice='good' Clicks={good} />
-        <History Choice='neutral' Clicks={neutral} />
-        <History Choice='bad' Clicks={bad} />
+        <Statistics Name='good' Clicks={good} />
+        <Statistics Name='neutral' Clicks={neutral} />
+        <Statistics Name='bad' Clicks={bad} />
+        <Statistics Name='all' Clicks={all} />
+        <Statistics Name='average' Clicks={average/all} />
+        <Statistics Name='positive' Clicks={good/all*100} />
+        
       </div>
     </div>
   )
