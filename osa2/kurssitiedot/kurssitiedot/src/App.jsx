@@ -7,9 +7,9 @@ const Part = ({ part }) =>
   </p>
 
 const Content = ({ parts }) => {
-  return parts.map((part, i) => (
+  return parts.map((part) => (
     <Part
-      key={i}
+      key={part.id}
       part={part} 
     />
   ))}
@@ -29,14 +29,17 @@ const App = () => {
   const course = 'Half Stack application development'
   const parts = [
     {
+      id: 1,
       name: 'Fundamentals of React',
       exercises: 10
     },
     {
+      id: 2,
       name: 'Using props to pass data',
       exercises: 7
     },
     {
+      id: 3,
       name: 'State of a component',
       exercises: 14
     }
