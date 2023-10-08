@@ -1,13 +1,12 @@
 
 const Header = ({ course }) => <h1>{course}</h1>
 
-const Sum = props => {
-  const sum = props.parts.reduce(
-    (prevValue, currentValue) => prevValue + currentValue.exercises,
+const Sum = ({parts}) => {
+  const sum = parts.reduce((prevValue, currentValue) => prevValue + currentValue.exercises,
     0
-  );
+  )
   return <strong>total of {sum} exercises</strong>;
-};
+}
 
 
 const Part = ({ part }) => 
