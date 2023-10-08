@@ -1,5 +1,5 @@
 
-const Header = ({ course }) => <h1>{course}</h1>
+const Header = ({ course }) => <h2>{course.name}</h2>
 
 const Sum = ({parts}) => {
   const sum = parts.reduce((prevValue, currentValue) => prevValue + currentValue.exercises,
@@ -24,43 +24,80 @@ const Content = ({ parts }) => {
   )
 }
 
-const Course = ({ course, parts }) => { 
-  console.log(course)
-
-  return (
-    <div>
+const Course = ({ course, parts }) =>
+  <div>
     <Header course={course} />
     <Content parts={parts} />
-    </div>
+    <Sum parts={parts} />
+  </div>
+
+
+const Courses = ({ courses }) => { 
+  console.log(courses)
+  return courses.map((course) => (
+    <Course
+      key={course.id}
+      course={course}
+      parts={course.parts}
+    />
+    )
   )
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = [
+  const courses = [
     {
+      name: 'Half Stack application development',
       id: 1,
-      name: 'Fundamentals of React',
-      exercises: 10
-    },
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
     {
+      name: 'Node.js',
       id: 2,
-      name: 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      id: 3,
-      name: 'State of a component',
-      exercises: 14
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
     }
   ]
 
+
   return (
     <div>
-      <Course course={course} parts={parts}/>
-      <Sum parts={parts} />
+      <h1>Web development curriculum</h1>
+      <Courses courses={courses}/> 
     </div>
   )
+  
 }
 
 export default App
