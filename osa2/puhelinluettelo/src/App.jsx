@@ -17,6 +17,17 @@ const App = () => {
     const nameObject = {
       name: newName
     }
+    console.log('nameObject', nameObject)
+    const names = persons.map(person => person.name)
+    console.log('names', names)
+    const found = (name) => name === nameObject.name
+    if (names.some(found)) {
+      window.alert(`${newName} is already added to phonebook`)
+      setNewName('')
+      return 
+    }
+  
+      
     setPersons(persons.concat(nameObject))
     console.log('persons', persons)
     console.log('button clicked', event.target)
