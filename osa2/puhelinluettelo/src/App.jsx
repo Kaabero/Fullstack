@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import noteService from './services/persons'
+import personService from './services/persons'
 
 
-const Persons = ({ person }) => {
+const Persons = ({ person, remove }) => {
   return (
-    <p>{person.name} {person.number}</p>
+    <li>
+      {person.name} {person.number}
+      <button onClick={remove}>delete</button>
+    </li>
   )
 }
 
@@ -45,22 +47,40 @@ const App = () => {
 
   const showAll =[]
 
+  const filter = showAll.lenght === 0
+  ? persons
+  : persons.filter(person => person.name.toLowerCase().includes(searchWith.toLowerCase()))
+
+
+
+  const removePerson = id => {
+    const person = persons.find(n => n.id === id)
+    console.log('removable person:', person.name, person.id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(id)
+        .then(response => {
+          console.log(response)
+          const filtered = persons.filter(person => person.id !== id)
+          console.log('filtered', filtered)
+          setPersons(filtered)
+          setNewName('')
+          setNewNumber('')
+      })
+        .catch(error => {
+          console.log('fail')
+      })
+    }
+}
+
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
-  
-
-  const filter = showAll.lenght === 0
-    ? persons
-    : persons.filter(person => person.name.toLowerCase().includes(searchWith.toLowerCase()))
-
-  console.log('filter', filter)  
-
+ 
   const addPerson = (event) => {
     event.preventDefault()
     const nameObject = {
@@ -75,27 +95,27 @@ const App = () => {
       setNewNumber('')
       return 
     }   
-    noteService
+    personService
       .create(nameObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
+      .catch(error => {
+        console.log('fail')
+      })
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
   const handleSearchChange = (event) => {
-    console.log(event.target.value)
     setSearchWith(event.target.value)
     
   }
@@ -111,7 +131,11 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {filter.map(person =>
-          <Persons key={person.name} person={person} />
+          <Persons 
+            key={person.name} 
+            person={person}
+            remove={() => removePerson(person.id)}
+          />
           )}
       </div>
     </div>
