@@ -54,7 +54,7 @@ const App = () => {
 
 
   const removePerson = id => {
-    const person = persons.find(n => n.id === id)
+    const person = persons.find(p => p.id === id)
     console.log('removable person:', person.name, person.id)
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
@@ -90,11 +90,21 @@ const App = () => {
     const names = persons.map(person => person.name)
     const found = (name) => name === nameObject.name
     if (names.some(found)) {
-      window.alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return 
-    }   
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const changeNumberFor = persons.find(p => p.name === newName)
+        console.log('id', changeNumberFor.id)
+        const person = persons.find(p => p.id === changeNumberFor.id)
+        const changedPerson = { ...person, number: newNumber }
+      
+        personService
+          .update(changeNumberFor.id, changedPerson)
+          .then(changedPerson => {
+            setPersons(persons.map(person => person.id !== changeNumberFor.id ? person : changedPerson))
+          })
+        
+        return
+      }
+    }  
     personService
       .create(nameObject)
       .then(returnedPerson => {
@@ -132,7 +142,7 @@ const App = () => {
       <div>
         {filter.map(person =>
           <Persons 
-            key={person.name} 
+            key={person.id} 
             person={person}
             remove={() => removePerson(person.id)}
           />
