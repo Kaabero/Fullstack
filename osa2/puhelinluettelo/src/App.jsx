@@ -2,10 +2,23 @@ import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="complete">
+      {message}
+    </div>
+  )
+}
+
+
 const Persons = ({ person, remove }) => {
   return (
     <li>
-      {person.name} {person.number}
+      {person.name} {person.number} <br></br>
       <button onClick={remove}>delete</button>
     </li>
   )
@@ -45,6 +58,8 @@ const App = () => {
 
   const [searchWith, setSearchWith] = useState('')
 
+  const [completeMessage, setCompleteMessage] = useState(null)
+
   const showAll =[]
 
   const filter = showAll.lenght === 0
@@ -66,6 +81,13 @@ const App = () => {
           setPersons(filtered)
           setNewName('')
           setNewNumber('')
+          setCompleteMessage(
+            `Deleted ${person.name}`
+          )
+          setTimeout(() => {
+            setCompleteMessage(null)
+          }, 5000)
+      
       })
         .catch(error => {
           console.log('fail')
@@ -101,6 +123,12 @@ const App = () => {
           .then(changedPerson => {
             setPersons(persons.map(person => person.id !== changeNumberFor.id ? person : changedPerson))
           })
+          setCompleteMessage(
+            `Changed ${person.name}`
+          )
+          setTimeout(() => {
+            setCompleteMessage(null)
+          }, 5000)
         
         return
       }
@@ -111,10 +139,18 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setCompleteMessage(
+          `Added ${newName}`
+        )
+        setTimeout(() => {
+          setCompleteMessage(null)
+        }, 5000)
+    
       })
       .catch(error => {
         console.log('fail')
       })
+      
   }
 
   const handleNameChange = (event) => {
@@ -133,11 +169,18 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={completeMessage} />
       <form>
         <Filter handleSearchChange={handleSearchChange} />
       </form>
       <h2>Add a new</h2>
-        <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber= {newNumber} handleNumberChange={handleNumberChange} />
+        <PersonForm 
+          addPerson={addPerson} 
+          newName={newName} 
+          handleNameChange={handleNameChange} 
+          newNumber= {newNumber} 
+          handleNumberChange={handleNumberChange} 
+        />
       <h2>Numbers</h2>
       <div>
         {filter.map(person =>
