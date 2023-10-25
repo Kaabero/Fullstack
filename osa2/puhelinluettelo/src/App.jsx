@@ -100,11 +100,19 @@ const App = () => {
           )
           setTimeout(() => {
             setCompleteMessage(null)
-          }, 5000)
+          }, 3000)
       
       })
-        .catch(error => {
-          console.log('fail')
+      .catch(error => {
+        setErrorMessage(
+          `Information of '${person.name}' has already been removed from server`
+        )
+        setNewName('')
+        setNewNumber('')
+        setCompleteMessage(null)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
       })
     }
 }
@@ -148,14 +156,14 @@ const App = () => {
             setCompleteMessage(null)
             setTimeout(() => {
               setErrorMessage(null)
-            }, 5000)
+            }, 3000)
           })
           setCompleteMessage(
             `Changed ${person.name}`
           )
           setTimeout(() => {
             setCompleteMessage(null)
-          }, 5000)
+          }, 3000)
         return
       }
     }  
@@ -170,13 +178,9 @@ const App = () => {
         )
         setTimeout(() => {
           setCompleteMessage(null)
-        }, 5000)
+        }, 3000)
     
-      })
-      .catch(error => {
-        console.log('fail')
-      })
-      
+      })      
   }
 
   const handleNameChange = (event) => {
