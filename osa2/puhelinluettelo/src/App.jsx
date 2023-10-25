@@ -14,6 +14,18 @@ const Notification = ({ message }) => {
   )
 }
 
+const Error = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 
 const Persons = ({ person, remove }) => {
   return (
@@ -59,6 +71,8 @@ const App = () => {
   const [searchWith, setSearchWith] = useState('')
 
   const [completeMessage, setCompleteMessage] = useState(null)
+
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const showAll =[]
 
@@ -122,6 +136,19 @@ const App = () => {
           .update(changeNumberFor.id, changedPerson)
           .then(changedPerson => {
             setPersons(persons.map(person => person.id !== changeNumberFor.id ? person : changedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            setErrorMessage(
+              `Information of '${person.name}' has already been removed from server`
+            )
+            setNewName('')
+            setNewNumber('')
+            setCompleteMessage(null)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
           setCompleteMessage(
             `Changed ${person.name}`
@@ -129,7 +156,6 @@ const App = () => {
           setTimeout(() => {
             setCompleteMessage(null)
           }, 5000)
-        
         return
       }
     }  
@@ -170,6 +196,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={completeMessage} />
+      <Error message={errorMessage} />
       <form>
         <Filter handleSearchChange={handleSearchChange} />
       </form>
