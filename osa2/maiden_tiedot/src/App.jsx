@@ -5,8 +5,8 @@ import countryService from './services/countries'
 const Country = ({ country }) => {
   const languages = Object.values(country.languages)
   const flag = country.flag
-  console.log('falg', typeof(flag))
-  console.log('values', languages)
+  console.log('flag', typeof(flag))
+  console.log('languages', languages)
   
   return (
     <div>
@@ -25,10 +25,12 @@ const Country = ({ country }) => {
     </div>
   )
 }
-const Countries = ({ country }) => {
+const Countries = ({ country, handleShowButton }) => {
+
   return (
     <li>
-      {country.name.common}
+      {country.name.common} 
+      <button onClick={() => handleShowButton(country)}>show</button>
     </li>
   )
 }
@@ -50,9 +52,8 @@ const Languages = ({ language }) => {
 }
 
 
-const Result = ({ filter }) => {
+const Result = ({ filter, handleShowButton }) => {
   if (filter.length > 10) {
-    console.log('too many')
     return <p>Too many matches, specify another filter</p>
   }   
   if (filter.length <= 10 && filter.length > 1) {
@@ -62,13 +63,13 @@ const Result = ({ filter }) => {
         <Countries 
           key={country.name.official} 
           country={country}
+          handleShowButton={handleShowButton}
         />
       )}
     </div>
     )
   }
   if (filter.length === 1) {
-    console.log('just one', filter)
     return (
       <div>
       {filter.map(country =>
@@ -80,7 +81,6 @@ const Result = ({ filter }) => {
     </div>
     )
   }
-
 }
 
 const App = () => {
@@ -90,11 +90,14 @@ const App = () => {
 
   const showAll =[]
 
-
   const filter = showAll.lenght === 0
   ? countries
   : countries.filter(country => country.name.common.toLowerCase().includes(searchWith.toLowerCase()))
 
+  const handleShowButton = (country) => {
+    setSearchWith(country.name.common)
+   
+  }
 
   useEffect(() => {
     countryService
@@ -118,6 +121,7 @@ const App = () => {
       <div>
         <Result
           filter={filter}
+          handleShowButton={handleShowButton}
         />
       </div>
     </div>
