@@ -142,7 +142,6 @@ const App = () => {
         
       
         personService
-        console.log('changed person', changedPerson.number)
           .update(changeNumberFor.id, changedPerson)
           .then(changedPerson => {
             setPersons(persons.map(person => person.id !== changeNumberFor.id ? person : changedPerson))
@@ -168,6 +167,7 @@ const App = () => {
           }, 3000)
         return
       }
+      return
     }  
     personService
       .create(nameObject)
