@@ -170,10 +170,9 @@ const App = () => {
       return
     }  
     personService
-      console.log('moi')
       .create(nameObject)
       .then(returnedPerson => {
-        console.log('hei')
+        console.log('moi')
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
