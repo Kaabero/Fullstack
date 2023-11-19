@@ -167,6 +167,9 @@ const App = () => {
           }, 3000)
         return
       }
+      console.log('hei')
+      setNewName('')
+      setNewNumber('')
       return
     }  
     personService
