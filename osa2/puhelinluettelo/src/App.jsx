@@ -102,7 +102,6 @@ const App = () => {
           setTimeout(() => {
             setCompleteMessage(null)
           }, 3000)
-      
       })
       .catch(error => {
         setErrorMessage(
@@ -113,6 +112,9 @@ const App = () => {
         setCompleteMessage(null)
         setTimeout(() => {
           setErrorMessage(null)
+        }, 3000)
+        setTimeout(() => {
+          location.reload()
         }, 3000)
       })
     }
@@ -154,6 +156,9 @@ const App = () => {
               setCompleteMessage(null)
               setTimeout(() => {
                 setErrorMessage(null)
+              }, 3000)
+              setTimeout(() => {
+                location.reload()
               }, 3000)
               return
             }
