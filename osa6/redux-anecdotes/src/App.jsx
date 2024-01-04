@@ -17,7 +17,7 @@ const App = () => {
     console.log('vote', id)
     dispatch(voteFor(id))
 
-  }
+  } 
 
   return (
     <div>
