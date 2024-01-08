@@ -12,8 +12,9 @@ const AnecdoteList= () => {
         console.log('filter', filter)
         return state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
     })
-
-    const sortedAnecdotes = anecdotes.sort((a ,b) => b.votes - a.votes)
+    console.log('anecdotes', anecdotes)
+    const copy = [...anecdotes]
+    const sortedAnecdotes = copy.sort((a ,b) => b.votes - a.votes)
     
     const vote = (id) => {
         console.log('vote', id)
