@@ -3,7 +3,7 @@ import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 
-const AnecdoteForm= (props) => {
+const AnecdoteForm= () => {
     const dispatch = useDispatch()
 
     const addAnecdote = async (event) => {
