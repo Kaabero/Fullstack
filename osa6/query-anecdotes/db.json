@@ -47,13 +47,18 @@
     },
     {
       "content": "testi",
-      "votes": 0,
+      "votes": 1,
       "id": "6TwUCn-"
     },
     {
       "content": "testi",
-      "votes": 0,
+      "votes": 2,
       "id": "p0bB6Hq"
+    },
+    {
+      "content": "testi",
+      "votes": 0,
+      "id": "mx-jRgC"
     }
   ]
 }
