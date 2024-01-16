@@ -92,13 +92,10 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  //const [content, setContent] = useState('')
-  // const [author, setAuthor] = useState('')
-  //const [info, setInfo] = useState('')
   const navigate = useNavigate()
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  const { reset: resetContent, ...content } = useField("text")
+  const { reset: resetAuthor, ...author } = useField("text")
+  const { reset: resetInfo, ...info } = useField("text")
 
   const handleSubmit = (e) => {
     console.log('content', content)
@@ -111,18 +108,13 @@ const CreateNew = (props) => {
       info: info.value,
       votes: 0
     })
-    /*
-    setContent('')
-    setAuthor('')
-    setInfo('')
-    */
     navigate('/')
   }
 
   const reset = () => {
-    content.reset()
-    author.reset()
-    info.reset()
+    resetContent()
+    resetAuthor()
+    resetInfo()
     
   }
 
@@ -132,27 +124,13 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}> 
         <div>
           content: 
-          <input
-            type={content.type}
-            value={content.value}
-            onChange={content.onChange}
-          />
-        </div>
-        <div>
+          <input {...content} />
+          <br/>
           author: 
-         <input
-           type={author.type}
-           value={author.value}
-           onChange={author.onChange}
-         />
-        </div> 
-        <div>
-        url for more info: 
-          <input
-            type={info.type}
-            value={info.value}
-            onChange={info.onChange}
-          />
+          <input {...author} />
+          <br/>
+          url for more info: 
+          <input {...info} />
         </div>
         <button>create</button>
       </form>
