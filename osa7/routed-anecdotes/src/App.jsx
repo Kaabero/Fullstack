@@ -100,7 +100,6 @@ const CreateNew = (props) => {
   const author = useField('text')
   const info = useField('text')
 
-
   const handleSubmit = (e) => {
     console.log('content', content)
     console.log('author', author)
@@ -118,6 +117,13 @@ const CreateNew = (props) => {
     setInfo('')
     */
     navigate('/')
+  }
+
+  const reset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+    
   }
 
   return (
@@ -150,6 +156,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      <button onClick={() => reset()} >reset</button>
     </div>
   )
 
