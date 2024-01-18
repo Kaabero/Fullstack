@@ -40,7 +40,7 @@ const useCountry = (name) => {
           }
         })
     }
-  }, )
+  }, [name])
 
   if (!country) {
     return null
