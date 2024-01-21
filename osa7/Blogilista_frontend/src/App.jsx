@@ -8,13 +8,13 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import { useDispatch } from 'react-redux'
 import { addNotification } from './reducers/notificationReducer'
+import { addError } from './reducers/errorReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [creatingVisible, setCreatingVisible] = useState(false)
   const dispatch = useDispatch()
 
@@ -35,10 +35,7 @@ const App = () => {
     console.log('user', user)
     console.log('blogobject', blogObject)
     if (!blogObject.title || !blogObject.author || !blogObject.url) {
-      setErrorMessage('Please fill the required fields')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
+      dispatch(addError('Please fill the required fields', 50))
       return
     }
     blogService
@@ -55,10 +52,7 @@ const App = () => {
         )
       })
       .catch((error) => {
-        setErrorMessage('something unexpected happened')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 3000)
+        dispatch(addError('something unexpected happened', 50))
       })
   }
 
@@ -77,12 +71,7 @@ const App = () => {
           dispatch(addNotification(`Deleted blog '${blog.title}'`, 50))
         })
         .catch((error) => {
-          setErrorMessage(
-            `Information of blog '${blog.title}' has already been removed from server`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 3000)
+          dispatch(addError(`Information of blog '${blog.title}' has already been removed from server`, 50))
           setTimeout(() => {}, 3000)
         })
     }
@@ -102,10 +91,7 @@ const App = () => {
         dispatch(addNotification('like added ', 50))
       })
       .catch((error) => {
-        setErrorMessage('something unexpected happened')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 3000)
+        dispatch(addError('something unexpected happened', 50))
       })
   }
 
@@ -134,10 +120,7 @@ const App = () => {
       setPassword('')
       dispatch(addNotification('you are logged in ', 50))
     } catch (exception) {
-      setErrorMessage('wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(addError('wrong username or password', 50))
     }
   }
 
@@ -145,7 +128,7 @@ const App = () => {
     <div>
       <h2>log in to application</h2>
       <Notification />
-      <Error message={errorMessage} />
+      <Error />
       <LoginForm
         handleLogin={handleLogin}
         username={username}
@@ -165,7 +148,7 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <Notification />
-        <Error message={errorMessage} />
+        <Error />
         <p>
           {user.name} logged in <button onClick={() => logout()}>logout</button>{' '}
         </p>
