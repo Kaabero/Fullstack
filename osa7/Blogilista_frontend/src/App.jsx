@@ -71,7 +71,12 @@ const App = () => {
           dispatch(addNotification(`Deleted blog '${blog.title}'`, 50))
         })
         .catch((error) => {
-          dispatch(addError(`Information of blog '${blog.title}' has already been removed from server`, 50))
+          dispatch(
+            addError(
+              `Information of blog '${blog.title}' has already been removed from server`,
+              50
+            )
+          )
           setTimeout(() => {}, 3000)
         })
     }
