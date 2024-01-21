@@ -4,7 +4,6 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const middleware = require('../utils/middleware')
 
-
 /*
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
@@ -15,33 +14,31 @@ const getTokenFrom = request => {
 }
 */
 
-
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog
-  .find({}).populate('user', { username: 1, name: 1 })
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
-
 })
 
+blogsRouter.delete(
+  '/:id',
+  middleware.userExtractor,
+  async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    console.log('blog', blog)
+    console.log('bloguser', blog.user)
+    //const userid = jwt.verify(request.token, process.env.SECRET)
+    const user = request.user
+    console.log('user', user.id)
 
-
-blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
-  console.log('blog', blog)
-  console.log('bloguser', blog.user)
-  //const userid = jwt.verify(request.token, process.env.SECRET)
-  const user = request.user
-  console.log('user', user.id)
-
-  // console.log('userid', userid.id)
-  if ( blog.user.toString() === user.id.toString() ) {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
-  } else {
-    response.status(401).json({ error: 'authorization failed' })
+    // console.log('userid', userid.id)
+    if (blog.user.toString() === user.id.toString()) {
+      await Blog.findByIdAndDelete(request.params.id)
+      response.status(204).end()
+    } else {
+      response.status(401).json({ error: 'authorization failed' })
+    }
   }
-})
-
+)
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
@@ -52,12 +49,10 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
-
-
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  
+
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
@@ -68,7 +63,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   console.log('user', user)
   const likes = body.likes !== undefined ? body.likes : 0
   console.log('bodytitle', body.title)
-  
+
   if (!body.title || !body.url) {
     response.status(400).json({})
     return
@@ -78,8 +73,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     author: body.author,
     url: body.url,
     likes: likes,
-    user: user._id 
-    
+    user: user._id,
   })
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
@@ -97,16 +91,15 @@ blogsRouter.put('/:id', async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: body.user.id
-  
+    user: body.user.id,
   }
 
   console.log('backendblog', blog)
-    
-  const blogToReturn = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+
+  const blogToReturn = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    new: true,
+  })
   response.status(200).json(blogToReturn)
-
 })
-
 
 module.exports = blogsRouter

@@ -14,7 +14,8 @@ mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGODB_URI)
 
-mongoose.connect(config.MONGODB_URI)
+mongoose
+  .connect(config.MONGODB_URI)
   .then(() => {
     logger.info('connected to MongoDB')
   })
@@ -27,7 +28,6 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
-
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)

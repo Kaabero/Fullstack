@@ -11,9 +11,10 @@ usersRouter.post('/', async (request, response) => {
   }
 
   if (password.length < 3) {
-    response.status(400).json('password is shorter than the minimum allowed length (3)')
+    response
+      .status(400)
+      .json('password is shorter than the minimum allowed length (3)')
     return
-
   }
 
   const saltRounds = 10
@@ -31,9 +32,13 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.get('/', async (request, response) => {
-    const users = await User
-    .find({}).populate('blogs', { author: 1, title: 1, url: 1, likes: 1, })
-    response.json(users)
+  const users = await User.find({}).populate('blogs', {
+    author: 1,
+    title: 1,
+    url: 1,
+    likes: 1,
+  })
+  response.json(users)
 })
 
 module.exports = usersRouter
