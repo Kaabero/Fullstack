@@ -1,20 +1,36 @@
-import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { addNotification } from '../reducers/notificationReducer'
+import { addError } from '../reducers/errorReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-  const [newTitle, setNewTitle] = useState('')
+const BlogForm = ({ setVisability }) => {
+  const dispatch = useDispatch()
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
-    createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    })
-    setNewAuthor('')
-    setNewTitle('')
-    setNewUrl('')
+    const title = event.target.title.value
+    event.target.title.value = ''
+    const author = event.target.author.value
+    event.target.author.value = ''
+    const url = event.target.url.value
+    event.target.url.value = ''
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url,
+    }
+    if (!newBlog.title || !newBlog.author || !newBlog.url) {
+      dispatch(addError('Please fill the required fields', 50))
+      return
+    }
+    dispatch(createBlog(newBlog))
+    setVisability()
+    dispatch(
+      addNotification(
+        `a new blog ${newBlog.title} by ${newBlog.author} added `,
+        50
+      )
+    )
   }
 
   return (
@@ -24,30 +40,15 @@ const BlogForm = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div>
           title:
-          <input
-            id="title"
-            value={newTitle}
-            onChange={(event) => setNewTitle(event.target.value)}
-            placeholder="write title here"
-          />
+          <input name="title" id="title" placeholder="write title here" />
         </div>
         <div>
           author:
-          <input
-            id="author"
-            value={newAuthor}
-            onChange={(event) => setNewAuthor(event.target.value)}
-            placeholder="write author here"
-          />
+          <input name="author" id="author" placeholder="write author here" />
         </div>
         <div>
           url:
-          <input
-            id="url"
-            value={newUrl}
-            onChange={(event) => setNewUrl(event.target.value)}
-            placeholder="write url here"
-          />
+          <input name="url" id="url" placeholder="write url here" />
         </div>
         <button id="create-button" type="submit">
           create

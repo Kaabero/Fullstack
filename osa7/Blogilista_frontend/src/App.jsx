@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -6,12 +7,11 @@ import Error from './components/Error'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
-import { useDispatch } from 'react-redux'
 import { addNotification } from './reducers/notificationReducer'
 import { addError } from './reducers/errorReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -19,8 +19,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [blogs])
+    dispatch(initializeBlogs())
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -31,29 +31,12 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (blogObject) => {
-    console.log('user', user)
-    console.log('blogobject', blogObject)
-    if (!blogObject.title || !blogObject.author || !blogObject.url) {
-      dispatch(addError('Please fill the required fields', 50))
-      return
-    }
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        console.log('returnedBlog', returnedBlog)
-        setBlogs(blogs.concat(returnedBlog))
-        setCreatingVisible(false)
-        dispatch(
-          addNotification(
-            `a new blog ${blogObject.title} by ${blogObject.author} added `,
-            50
-          )
-        )
-      })
-      .catch((error) => {
-        dispatch(addError('something unexpected happened', 50))
-      })
+  const blogs = useSelector((state) => {
+    return state.blogs
+  })
+
+  const setVisabilityFalse = () => {
+    setCreatingVisible(false)
   }
 
   const removeBlog = (id) => {
@@ -147,7 +130,11 @@ const App = () => {
   const blogForm = () => {
     const hideWhenVisible = { display: creatingVisible ? 'none' : '' }
     const showWhenVisible = { display: creatingVisible ? '' : 'none' }
-    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+
+    console.log('blogs', blogs)
+    const copy = [...blogs]
+    const sortedBlogs = copy.sort((a, b) => b.likes - a.likes)
+    console.log('sorted', sortedBlogs)
 
     return (
       <div>
@@ -163,7 +150,7 @@ const App = () => {
           </button>
         </div>
         <div style={showWhenVisible}>
-          <BlogForm createBlog={addBlog} />
+          <BlogForm setVisability={setVisabilityFalse} />
           <button onClick={() => setCreatingVisible(false)}>cancel</button>
         </div>
         {sortedBlogs.map((blog) => (
