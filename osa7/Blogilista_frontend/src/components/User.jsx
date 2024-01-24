@@ -7,9 +7,12 @@ const User = ({ user }) => {
     <div>
       <table id="user">
         <thead>
-          <tr><td>{name}</td><td>{blogs.length}</td></tr>
+          <tr>
+            <td>{name}</td>
+            <td>{blogs.length}</td>
+          </tr>
         </thead>
-    </table>
+      </table>
     </div>
   )
 }

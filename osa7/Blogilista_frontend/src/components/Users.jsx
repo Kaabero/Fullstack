@@ -6,15 +6,17 @@ const Users = ({ users }) => (
     <h2>Users</h2>
 
     <table id="users">
-        <thead>
-            <tr><th>User</th><th>Blogs created</th></tr>
-        </thead>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Blogs created</th>
+        </tr>
+      </thead>
     </table>
 
     {users.map((user) => (
       <User key={user.id} user={user} />
     ))}
-
   </div>
 )
 
