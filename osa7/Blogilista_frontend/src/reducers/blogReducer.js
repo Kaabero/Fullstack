@@ -10,12 +10,10 @@ const blogSlice = createSlice({
     },
 
     setBlogs(state, action) {
-      console.log('setBlogs', action.payload)
       return action.payload
     },
 
     updateBlogs(state, action) {
-      console.log('action', action.payload)
       return state.push(action.payload)
     },
   },
