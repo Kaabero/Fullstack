@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -27,19 +28,6 @@ let authors = [
   },
 ]
 
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
- *
- * Spanish:
- * Podría tener más sentido asociar un libro con su autor almacenando la id del autor en el contexto del libro en lugar del nombre del autor
- * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conección con el libro
-*/
 
 let books = [
   {
@@ -93,13 +81,9 @@ let books = [
   },
 ]
 
-/*
-  you can remove the placeholder query once your first one has been implemented 
-*/
-
 const typeDefs = `
   type Book {
-    title: String
+    title: String!
     published: Int
     author: String
     id: ID!
@@ -118,6 +102,14 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     
+  }
+  type Mutation {
+    addBook(
+        title: String!
+        published: Int
+        author: String
+        genres: [String]
+    ): Book
   }
 `
 
@@ -147,9 +139,23 @@ const resolvers = {
             author.bookCount = bookCount.length
           })
           return authors
-    },
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      console.log('updatedbooks', books)
+      if ((authors.find(a => a.name === args.author)) === undefined) {
+        const author = { name: args.author, id: uuid() }
+        authors = authors.concat(author)
+        console.log('updatedauthors', authors)
+      }
+      return book
+    }
   }
 }
+
 
 const server = new ApolloServer({
   typeDefs,
