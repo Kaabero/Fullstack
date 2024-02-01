@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Select from 'react-select';
 import { useMutation } from '@apollo/client'
 
 import { EDIT_AUTHOR } from '../queries'
@@ -14,18 +15,21 @@ const Authors = (props) => {
   }
 
   const submit = async (event) => {
+    const selectedName = name.value
+    
     event.preventDefault()
 
-    console.log('täällä ollaan')
-    changeAuthor({ variables: { name, born }})
-
+    changeAuthor({ variables: { selectedName, born }})
 
     setName('')
     setBorn('')
   }
 
-
-  console.log('authors', props.authors)
+  const options = props.authors.map((author) => ({
+    value: author.name,
+    label: author.name,
+  }))
+    
   return (
     <div>
       <h2>authors</h2>
@@ -49,11 +53,12 @@ const Authors = (props) => {
       <div>
       <form onSubmit={submit}>
         <div>
-          name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+
+        <Select 
+          onChange={setName} 
+          defaultValue={null}
+          options={options}
+        />  
         </div>
         <div>
           born
