@@ -2,29 +2,16 @@ import { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { ALL_DATA } from './queries'
 
-const ALL_DATA = gql`
-  query {
-    allAuthors  {
-      name,
-      id,
-      born,
-      bookCount
-    },
-    allBooks {
-      title,
-      published,
-      author,
-      id,
-      genres
-    }
-  }
-`
+
 
 const App = () => {
   const [page, setPage] = useState('authors')
-  const result = useQuery(ALL_DATA)
+  const result = useQuery(ALL_DATA, {
+    pollInterval: 2000
+  })
   
 
   if (result.loading) {
