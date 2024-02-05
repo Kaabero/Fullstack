@@ -1,4 +1,5 @@
 const Books = (props) => {
+  console.log('books', props.books)
   if (!props.show) {
     return null
   }
@@ -17,7 +18,7 @@ const Books = (props) => {
           {props.books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}

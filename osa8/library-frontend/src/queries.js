@@ -4,16 +4,17 @@ export const ALL_DATA = gql`
     query {
         allAuthors  {
             name,
-            id,
             born,
             bookCount
+            
         },
         allBooks {
             title,
             published,
-            author,
-            id,
-            genres
+            genres,
+            author {
+              name
+            }
         }
     }
 `

@@ -12,6 +12,8 @@ const App = () => {
   const result = useQuery(ALL_DATA, {
     pollInterval: 2000
   })
+
+  console.log('result', result.data)
   
 
   if (result.loading) {

@@ -29,7 +29,7 @@ const Authors = (props) => {
     value: author.name,
     label: author.name,
   }))
-    
+  
   return (
     <div>
       <h2>Authors</h2>
