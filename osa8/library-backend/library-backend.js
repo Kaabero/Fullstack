@@ -60,9 +60,9 @@ const typeDefs = `
   type Mutation {
     addBook(
         title: String!
-        published: Int!
-        author: String!
-        genres: [String!]!
+        published: Int
+        author: String
+        genres: [String]
     ): Book!
 
     editAuthor(
@@ -138,12 +138,12 @@ const resolvers = {
 
   },
   Book: {
-    author: async (root) => {
+    author: async (root, args) => {
       const authors = await Author.find({})
       authors.map(author => {
         author.bookCount = author.books.length
       })
-      console.log('root', root.author)
+      console.log('root2', root.author)
       const author = authors.find(a => {
         console.log(a._id.toString() === root.author.toString())
         if (a._id.toString() === root.author.toString()) {
@@ -162,12 +162,13 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, context) => {
+      console.log("ADD BOOK")
       const authors = await Author.find({})
       const books = await Book.find({})
       const currentUser = context.currentUser
+      console.log("CREATE BOOK")
       console.log('user', currentUser)
       console.log('args', args)
-
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
           extensions: {
@@ -300,7 +301,7 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-  
+
       if ( !user || args.password !== 'secret' ) {
         throw new GraphQLError('wrong credentials', {
           extensions: { code: 'BAD_USER_INPUT' }

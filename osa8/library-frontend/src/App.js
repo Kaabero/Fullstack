@@ -1,17 +1,21 @@
 import { useState } from 'react'
+import AuthorsForUsers from './components/AuthorsForUsers'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery } from '@apollo/client'
+import LoginForm from './components/LoginForm'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_DATA } from './queries'
 
 
 
 const App = () => {
-  const [page, setPage] = useState('authors')
+  const [token, setToken] = useState(null)
+  const [page, setPage] = useState('books')
   const result = useQuery(ALL_DATA, {
     pollInterval: 2000
   })
+  const client = useApolloClient()
 
   console.log('result', result.data)
   
@@ -20,15 +24,42 @@ const App = () => {
     return <div>loading...</div>
   }
 
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
+
+
+  if (!token) {
+    return (
+      <div>
+        <div>
+          <button onClick={() => setPage('authors')}>authors</button>
+          <button onClick={() => setPage('books')}>books</button>
+          <button onClick={() => setPage('login')}>login</button>
+        </div>
+
+        <Authors authors={result.data.allAuthors} show={page === 'authors'} />
+
+        <Books books={result.data.allBooks} show={page === 'books'} />
+
+        <LoginForm setToken={setToken} show={page === 'login'} />
+
+      </div>
+    )
+  }
+
   return (
     <div>
       <div>
-        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('authorsForUsers')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={logout}>logout</button>
       </div>
 
-      <Authors authors={result.data.allAuthors} show={page === 'authors'} />
+      <AuthorsForUsers authors={result.data.allAuthors} show={page === 'authorsForUsers'} />
 
       <Books books={result.data.allBooks} show={page === 'books'} />
 
