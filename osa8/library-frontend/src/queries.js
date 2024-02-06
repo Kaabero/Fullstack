@@ -20,6 +20,10 @@ export const ALL_DATA = gql`
         },
         allGenres {
           genre
+        },
+        me {
+          username,
+          favoriteGenre
         }
     }
 `
