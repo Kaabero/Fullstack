@@ -171,7 +171,7 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, context) => {
-      console.log("ADD BOOK")
+      
       const authors = await Author.find({})
       const books = await Book.find({})
       const currentUser = context.currentUser
