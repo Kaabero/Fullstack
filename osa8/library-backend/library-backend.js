@@ -8,6 +8,7 @@ mongoose.set('strictQuery', false)
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+const Genre = require('./models/genre')
 
 require('dotenv').config()
 
@@ -49,9 +50,13 @@ const typeDefs = `
     bookCount: Int
     
   }
+  type Genre {
+    genre: String
+  }
   type Query {
     bookCount: Int!
     authorCount: Int!
+    allGenres: [Genre]
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
@@ -86,6 +91,10 @@ const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
+    allGenres: async (root, args) => {
+      return await Genre.find({})
+      
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
@@ -166,7 +175,6 @@ const resolvers = {
       const authors = await Author.find({})
       const books = await Book.find({})
       const currentUser = context.currentUser
-      console.log("CREATE BOOK")
       console.log('user', currentUser)
       console.log('args', args)
       if (!currentUser) {
@@ -192,6 +200,13 @@ const resolvers = {
 
           const savedBook = await book.save()
           author.books = author.books.concat(savedBook._id)
+          savedBook.genres.map(async (g) => {
+            try {
+            await new Genre({genre: g}).save()
+            } catch (error) {
+              console.log('error:', error.message)
+            }
+          })
           await author.save()
           return savedBook
         
@@ -240,6 +255,14 @@ const resolvers = {
       try {
         const savedBook = await book.save()
         author.books = author.books.concat(savedBook._id)
+        savedBook.genres.map(async (g) => {
+          try {
+          await new Genre({genre: g}).save()
+          } catch (error) {
+            console.log('error:', error.message)
+          }
+        })
+
         await author.save()
         return savedBook
       } catch (error) {

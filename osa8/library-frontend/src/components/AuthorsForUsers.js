@@ -42,9 +42,9 @@ const AuthorsForUsers = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>born</th>
-            <th>books</th>
+            <th>Author</th>
+            <th>Born</th>
+            <th>Books</th>
           </tr>
           {props.authors.map((a) => (
             <tr key={a.name}>

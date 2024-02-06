@@ -17,6 +17,9 @@ export const ALL_DATA = gql`
               born
               bookCount
             }
+        },
+        allGenres {
+          genre
         }
     }
 `

@@ -12,9 +12,9 @@ import { ALL_DATA } from './queries'
 const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('books')
-  const result = useQuery(ALL_DATA, {
+  const result = useQuery(ALL_DATA , {
     pollInterval: 2000
-  })
+  } )
   const client = useApolloClient()
 
   console.log('result', result.data)
@@ -42,7 +42,7 @@ const App = () => {
 
         <Authors authors={result.data.allAuthors} show={page === 'authors'} />
 
-        <Books books={result.data.allBooks} show={page === 'books'} />
+        <Books books={result.data.allBooks} genres={result.data.allGenres} show={page === 'books'} />
 
         <LoginForm setToken={setToken} show={page === 'login'} />
 
@@ -61,7 +61,7 @@ const App = () => {
 
       <AuthorsForUsers authors={result.data.allAuthors} show={page === 'authorsForUsers'} />
 
-      <Books books={result.data.allBooks} show={page === 'books'} />
+      <Books books={result.data.allBooks} genres={result.data.allGenres} show={page === 'books'} />
 
       <NewBook show={page === 'add'} />
     </div>
