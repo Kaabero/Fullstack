@@ -5,8 +5,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_DATA } from './queries'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
+import { ALL_DATA, BOOK_ADDED } from './queries'
 
 
 
@@ -17,6 +17,13 @@ const App = () => {
     pollInterval: 1000
   } )
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log('data', data)
+      window.alert(`Book added: ${data.data.bookAdded.title}`)
+    }
+  })
 
   console.log('result', result.data)
   
