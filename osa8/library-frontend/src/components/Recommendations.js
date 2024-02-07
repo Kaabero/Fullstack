@@ -1,13 +1,18 @@
+
 const Recommendations = (props) => {
+
+    if (!props.show) {
+      return null
+    }
+
+
     console.log('books', props.books)
     console.log('genre', props.user.favoriteGenre)
   
     const filteredBooks = props.books.filter(book => book.genres.find(genre => genre === props.user.favoriteGenre))
     console.log('filtered', filteredBooks)
 
-    if (!props.show) {
-        return null
-    }
+   
   
     return (
       <div>

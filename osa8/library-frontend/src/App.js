@@ -14,7 +14,7 @@ const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('books')
   const result = useQuery(ALL_DATA , {
-    pollInterval: 2000
+    pollInterval: 1000
   } )
   const client = useApolloClient()
 
