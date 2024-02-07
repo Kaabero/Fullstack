@@ -2,14 +2,20 @@ const { ApolloServer } = require('@apollo/server')
 const { expressMiddleware } = require('@apollo/server/express4')
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
+
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+
 const express = require('express')
 const cors = require('cors')
 const http = require('http')
+const bodyParser = require('body-parser')
+
+
 
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
-
 const User = require('./models/user')
 
 const typeDefs = require('./schema')
@@ -32,11 +38,33 @@ mongoose.connect(MONGODB_URI)
 const start = async () => {
   const app = express()
   const httpServer = http.createServer(app)
-  const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/',
   })
+    
+  const schema = makeExecutableSchema({ typeDefs, resolvers })
+  const serverCleanup = useServer({ schema }, wsServer);
+  
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+  })
+  
   await server.start()
+    
   app.use(
     '/',
     cors(),

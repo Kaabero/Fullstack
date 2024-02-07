@@ -1,6 +1,9 @@
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
@@ -107,20 +110,34 @@ const resolvers = {
   
   
         if ((authors.find(a => a.name === args.author)) === undefined) {
+          const author = new Author({name: args.author, books: []})
+
           try {
-            const author = new Author({name: args.author, books: []})
             await author.save()
-            console.log('new author id', author._id)
-            const book = new Book({
-              title: args.title,
-              author: author._id,
-              published: args.published,
-              genres: args.genres
+          } catch (error) {
+            
+            throw new GraphQLError('Invalid author name', {
+              extensions: {
+                code: 'BAD_USER_INPUT',
+                invalidArgs: args.author, 
+                error,
+              }
             })
+          }
+          const authorId = author._id
+
+          console.log('new author id', author._id)
+          const book = new Book({
+            title: args.title,
+            author: author._id,
+            published: args.published,
+            genres: args.genres
+          })
+          try {
   
-            const savedBook = await book.save()
-            author.books = author.books.concat(savedBook._id)
-            savedBook.genres.map(async (g) => {
+            await book.save()
+            author.books = author.books.concat(book._id)
+            book.genres.map(async (g) => {
               try {
               await new Genre({genre: g}).save()
               } catch (error) {
@@ -128,18 +145,9 @@ const resolvers = {
               }
             })
             await author.save()
-            return savedBook
-          
+            
           } catch (error) {
-            if (args.author.length < 4 ) {
-              throw new GraphQLError('Invalid author name', {
-                extensions: {
-                  code: 'BAD_USER_INPUT',
-                  invalidArgs: args.author, 
-                  error,
-                }
-              })
-            }
+
             if (books.find(b => b.title === args.title)) {
               throw new GraphQLError('Title must be unique', {
                 extensions: {
@@ -160,6 +168,8 @@ const resolvers = {
               })
             }
           }
+          pubsub.publish('BOOK_ADDED', { bookAdded: book })
+          return book
         
         } else {
   
@@ -173,9 +183,9 @@ const resolvers = {
           genres: args.genres
         })
         try {
-          const savedBook = await book.save()
-          author.books = author.books.concat(savedBook._id)
-          savedBook.genres.map(async (g) => {
+          await book.save()
+          author.books = author.books.concat(book._id)
+          book.genres.map(async (g) => {
             try {
             await new Genre({genre: g}).save()
             } catch (error) {
@@ -184,7 +194,7 @@ const resolvers = {
           })
   
           await author.save()
-          return savedBook
+          
         } catch (error) {
           if (books.find(b => b.title === args.title)) {
             throw new GraphQLError('Title must be unique', {
@@ -205,6 +215,8 @@ const resolvers = {
             }
           })
         }}
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+        return book
         }
       },
       
@@ -259,7 +271,13 @@ const resolvers = {
         return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
       },
       
-    }
+    },
+    
+    Subscription: {
+      bookAdded: {
+        subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+      },
+    },
 }
 
 module.exports = resolvers
