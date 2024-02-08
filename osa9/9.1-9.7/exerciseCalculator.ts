@@ -76,7 +76,7 @@ const parseArgumentsForExercises = (args: string[]): number[] => {
   
 
   const parseArgumentsForTarget = (args: string[]): number => {
-    if (args.length < 3) throw new Error('Not enough arguments');
+    if (args.length < 4) throw new Error('Not enough arguments');
     
     if(!isNaN(Number(args[2]))) {
         console.log('target', Number(args[2]))
