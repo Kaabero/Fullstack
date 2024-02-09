@@ -9,7 +9,7 @@ interface Result {
 
 }  
 
-const calculateExercises = (exercises: number[], target: number): Result => {
+export const calculateExercises = (exercises: number[], target: number): Result => {
     const trainingDays = (exercises.filter(e => e > 0)).length;
     const periodLenght = exercises.length;
     const average = (exercises.reduce((a,b) => a+b, 0)) / periodLenght;
@@ -56,7 +56,7 @@ const calculateExercises = (exercises: number[], target: number): Result => {
 };
 
 
-const parseArgumentsForExercises = (args: string[]): number[] => {
+export const parseArgumentsForExercises = (args: string[]): number[] => {
     if (args.length < 4) throw new Error('Not enough arguments');
     
     const exercises = [];
@@ -72,10 +72,10 @@ const parseArgumentsForExercises = (args: string[]): number[] => {
     return exercises;
     
    
-  };
+};
   
 
-  const parseArgumentsForTarget = (args: string[]): number => {
+export const parseArgumentsForTarget = (args: string[]): number => {
     if (args.length < 4) throw new Error('Not enough arguments');
     
     if(!isNaN(Number(args[2]))) {
