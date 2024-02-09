@@ -26,8 +26,8 @@ app.get('/bmi', (req, res) => {
 const bmi = calculateBmi(height, weight)
 console.log('bmi', bmi)
 return res.json({
-    height,
     weight,
+    height,
     bmi
   });
 });
