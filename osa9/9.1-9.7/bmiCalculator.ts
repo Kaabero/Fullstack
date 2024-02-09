@@ -11,11 +11,11 @@ export const parseArguments = (args: string[]): CalculateBmi => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
   
 export const calculateBmi = (height: number, weight: number): string => {
   height = (height / 100) * (height / 100);
@@ -28,15 +28,15 @@ export const calculateBmi = (height: number, weight: number): string => {
   } else if ( bmi >= 25 && bmi <= 29.9) {
       return 'Overweight';
   } else {
-      return 'Obese'
+      return 'Obese';
   }
-}
+};
   
 try {
   const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight))
+  console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
