@@ -4,7 +4,7 @@ import { CoursePart } from "../../types"
 interface ContentProps {
 
     courseParts: CoursePart[]
-};
+}
 
 
 const Content = (props: ContentProps) => {
