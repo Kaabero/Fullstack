@@ -1,13 +1,32 @@
 import { useState, useEffect } from 'react';
-
 import { Entry } from "./types";
 import { getAllEntries, createEntry } from './entryService';
 
+import './index.css'
+
+interface NotificationProps {
+  message: string
+}
+
+const Notification = ({message}: NotificationProps) => {
+  if (message === '') {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
+
 const App = () => {
   const [date, setDate] = useState('');
-  const [visibility, setVisibility] = useState('');
-  const [weather, setWeather] = useState('');
-  const [comment, setComment] = useState('');
+  const [visibility, setVisibility] = useState('good');
+  const [weather, setWeather] = useState('sunny');
+  const [comment, setComment] = useState('nice');
+  const [message, setMessage] = useState('');
   const [entries, setEntries] = useState<Entry[]>([
     { id: 1, date: '2023-02-13', weather: 'sunny', visibility: 'good', comment: 'nice!' }
   ]);
@@ -19,11 +38,23 @@ const App = () => {
     })
   }, [])
 
-  const entryCreation = (event: React.SyntheticEvent) => {
+  const entryCreation = async (event: React.SyntheticEvent) => {
     event.preventDefault()
-    createEntry( {date, weather, visibility, comment} ).then(data => {
+    
+    try { 
+    await createEntry( {date, weather, visibility, comment} ).then(data => {
       setEntries(entries.concat(data))
+    
     })
+    } catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message)
+        setTimeout(() => {
+          setMessage('')
+        }, 3000)
+      }
+    }
+    
     setDate('')
     setVisibility('')
     setWeather('')
@@ -34,6 +65,7 @@ const App = () => {
     
     <div>
       <h2>Diary entires</h2>
+      <Notification message={message} />
       <ul>
         {entries.map(entry =>
           <li key={entry.id}><strong>{entry.date}</strong>< br />
