@@ -13,8 +13,8 @@ const getPatients = (): Patient[] => {
 
 const findById= (id: string): Patient | undefined => {
   const patient = patients.find(p => p.id === id);
-  console.log('patient', patient)
-  return patient
+  console.log('patient', patient);
+  return patient;
 };
 
 
