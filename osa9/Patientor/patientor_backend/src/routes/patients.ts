@@ -5,6 +5,8 @@ import toNewPatient from '../utils';
 const router = express.Router();
 
 router.get('/', (_req, res) => {
+  const data = patientService.getNonSensitivePatientData()
+  console.log(data)
   res.send(patientService.getNonSensitivePatientData());
 });
 
