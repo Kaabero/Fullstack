@@ -23,9 +23,9 @@ const Notification = ({message}: NotificationProps) => {
 
 const App = () => {
   const [date, setDate] = useState('');
-  const [visibility, setVisibility] = useState('good');
-  const [weather, setWeather] = useState('sunny');
-  const [comment, setComment] = useState('nice');
+  const [visibility, setVisibility] = useState('');
+  const [weather, setWeather] = useState('');
+  const [comment, setComment] = useState('');
   const [message, setMessage] = useState('');
   const [entries, setEntries] = useState<Entry[]>([
     { id: 1, date: '2023-02-13', weather: 'sunny', visibility: 'good', comment: 'nice!' }
@@ -43,9 +43,11 @@ const App = () => {
     
     try { 
     await createEntry( {date, weather, visibility, comment} ).then(data => {
-      setEntries(entries.concat(data))
+      setEntries(entries.concat(data));
     
-    })
+    });
+    setComment('')
+
     } catch (error) {
       if (error instanceof Error) {
         setMessage(error.message)
@@ -54,12 +56,8 @@ const App = () => {
         }, 3000)
       }
     }
-    
-    setDate('')
-    setVisibility('')
-    setWeather('')
-    setComment('')
   };
+
 
   return (
     
@@ -80,22 +78,73 @@ const App = () => {
         <div>
           date: 
           <input
-            value={date}
-            onChange={({ target }) => setDate(target.value)}
+            type='date'
+            onInput={() => {
+              const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
+              if (dateInput) {
+                setDate(dateInput.value);
+              }
+            }}
           />
         </div>
         <div>
           weather: 
+          sunny
           <input
-            value={weather}
-            onChange={({ target }) => setWeather(target.value)}
+            type='radio'
+            name='weather'
+            onChange={() => setWeather('sunny')}
+          />
+          cloudy
+          <input
+            type='radio'
+            name='weather'
+            onChange={() => setWeather('cloudy')}
+          />
+          rainy
+          <input
+            type='radio'
+            name='weather'
+            onChange={() => setWeather('rainy')}
+          />
+          stormy
+          <input
+            type='radio'
+            name='weather'
+            onChange={() => setWeather('stormy')}
+          />
+          windy
+          <input
+            type='radio'
+            name='weather'
+            onChange={() => setWeather('windy')}
           />
         </div>
         <div>
           visibility: 
+          great
           <input
-            value={visibility}
-            onChange={({ target }) => setVisibility(target.value)}
+            type='radio'
+            name='visibility'
+            onChange={() => setVisibility('great')}
+          />
+          good
+          <input
+            type='radio'
+            name='visibility'
+            onChange={() => setVisibility('good')}
+          />
+          ok
+          <input
+            type='radio'
+            name='visibility'
+            onChange={() => setVisibility('ok')}
+          />
+          poor
+          <input
+            type='radio'
+            name='visibility'
+            onChange={() => setVisibility('poor')}
           />
         </div>
         <div>
