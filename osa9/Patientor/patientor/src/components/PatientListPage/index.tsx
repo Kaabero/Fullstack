@@ -9,10 +9,7 @@ import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
 
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 interface Props {
   patients : Patient[]

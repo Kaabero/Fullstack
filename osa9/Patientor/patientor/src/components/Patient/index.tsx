@@ -8,9 +8,22 @@ import { Patient } from '../../types';
 
 
 const PatientInfo = () => {
-  const [ patient, setPatient ] = useState<Patient>()
-  const id = useParams()
-  console.log('id', id.id, typeof(id.id))
+  const [ patient, setPatient ] = useState<Patient>();
+  const id = useParams();
+  console.log('id', id.id, typeof(id.id));
+
+
+  useEffect(() => {
+    const getPatient = async () => {
+        if (id.id) {
+            const data = await patientService.getById(id.id);
+            setPatient(data);
+        }
+    };
+    getPatient();
+  }, [id.id]);
+  
+  console.log('patient', patient);
 
   if (!id.id) {
     return (
@@ -21,20 +34,8 @@ const PatientInfo = () => {
             </Typography>
           </Box>
         </div>
-    )
+    );
   }
-
-  useEffect(() => {
-    const getPatient = async () => {
-        if (id.id) {
-            const data = await patientService.getById(id.id);
-            setPatient(data)
-        }
-    }
-    getPatient()
-  }, [])
-  
-  console.log('patient', patient)
 
   if (patient) {
     return (
@@ -76,7 +77,7 @@ const PatientInfo = () => {
         </Typography>
       </Box>
     </div>
-    )
+    );
   }
 };
 

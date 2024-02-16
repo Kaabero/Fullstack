@@ -4,7 +4,7 @@ export interface Diagnosis {
   latin?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 export interface Entry {
 }
 

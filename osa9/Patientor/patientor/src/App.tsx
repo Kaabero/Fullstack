@@ -15,7 +15,7 @@ import PatientInfo from "./components/Patient";
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   
-  console.log('patients', patients)
+  console.log('patients', patients);
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
