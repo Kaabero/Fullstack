@@ -50,7 +50,7 @@ const PatientInfo = () => {
             <em>{entry.description}</em>
             <p>No diagnosis</p>
         </div>
-      )
+      );
     }
     return (
       <div>
@@ -62,7 +62,7 @@ const PatientInfo = () => {
           <p key={index}>{code}</p>
           )}
       </div>
-    )
+    );
   };
  
 
