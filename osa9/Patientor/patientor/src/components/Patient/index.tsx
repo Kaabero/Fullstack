@@ -3,27 +3,36 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Table,TableBody, TableHead, Typography, TableCell, TableRow,} from '@mui/material';
 import patientService from "../../services/patients";
-import { Patient, Entry } from '../../types';
+import diagnosesService from "../../services/diagnoses";
+import { Patient, Entry, Diagnosis } from '../../types';
 
 
 
 const PatientInfo = () => {
   const [ patient, setPatient ] = useState<Patient>();
+  const [ diagnoses, setDiagnoses ] = useState<Diagnosis[]>();
   const id = useParams();
   console.log('id', id.id, typeof(id.id));
 
 
   useEffect(() => {
+    const getDiagnoses = async () => {
+      const diagnosesData = await diagnosesService.getAll();
+      setDiagnoses(diagnosesData);
+    };
     const getPatient = async () => {
         if (id.id) {
             const data = await patientService.getById(id.id);
             setPatient(data);
         }
+
     };
     getPatient();
+    getDiagnoses();
   }, [id.id]);
   
   console.log('patient', patient);
+  console.log('diagnoses', diagnoses);
 
  
 
@@ -39,6 +48,20 @@ const PatientInfo = () => {
     );
   }
 
+  const DiagnosisData = ({ code, diagnoses }: { code: string; diagnoses: Diagnosis[] | undefined }) => {
+
+    const diagnosis = diagnoses?.find(diagnosis => diagnosis.code === code);
+  
+    if (!diagnosis) {
+      return null;
+    }
+  
+    return (
+      <p>
+        {diagnosis.code}: {diagnosis.name}
+      </p>
+    );
+  };
   const Entries = (entry: Entry) => {
    
 
@@ -59,7 +82,11 @@ const PatientInfo = () => {
           <em>{entry.description}</em>
           <p>Diagnosis:</p>
           {(entry.diagnosisCodes).map((code: string, index: number) =>
-          <p key={index}>{code}</p>
+          <DiagnosisData
+            key={index}
+            code={code}
+            diagnoses={diagnoses}
+          />
           )}
       </div>
     );
