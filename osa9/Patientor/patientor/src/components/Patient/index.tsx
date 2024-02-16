@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Table,TableBody, TableHead, Typography, TableCell, TableRow,} from '@mui/material';
 import patientService from "../../services/patients";
-import { Patient } from '../../types';
+import { Patient, Entry } from '../../types';
 
 
 
@@ -25,6 +25,8 @@ const PatientInfo = () => {
   
   console.log('patient', patient);
 
+ 
+
   if (!id.id) {
     return (
         <div className="App">
@@ -36,6 +38,34 @@ const PatientInfo = () => {
         </div>
     );
   }
+
+  const Entries = (entry: Entry) => {
+   
+
+    if (!entry.diagnosisCodes){
+      return (
+        <div>
+            <br />
+            <strong>{entry.date}</strong> <br />
+            <em>{entry.description}</em>
+            <p>No diagnosis</p>
+        </div>
+      )
+    }
+    return (
+      <div>
+          <br />
+          <strong>{entry.date}</strong> <br />
+          <em>{entry.description}</em>
+          <p>Diagnosis:</p>
+          {(entry.diagnosisCodes).map((code: string, index: number) =>
+          <p key={index}>{code}</p>
+          )}
+      </div>
+    )
+  };
+ 
+
 
   if (patient) {
     return (
@@ -51,8 +81,7 @@ const PatientInfo = () => {
                 <TableCell>Ssn</TableCell>
                 <TableCell>Date of Birth</TableCell>
                 <TableCell>Gender</TableCell>
-                <TableCell>Occupation</TableCell> 
-                <TableCell>Entries</TableCell>      
+                <TableCell>Occupation</TableCell>     
             </TableRow>
             </TableHead>
             <TableBody>
@@ -65,6 +94,14 @@ const PatientInfo = () => {
             </TableBody>
             
         </Table>
+        <h2>Entries: </h2>
+        {(patient.entries).map((entry: Entry) => (
+          <Entries
+          key={entry.id}
+          {...entry}
+          />
+        ))}
+        
 
         </div>
     );
